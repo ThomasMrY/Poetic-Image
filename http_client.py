@@ -15,9 +15,9 @@ class Client:
         # image = Image.open()
         # plt.imshow(image)
         with open(img_path, "rb") as f:
-            form = {'Type': 'img',
-                    'data': f.read()}
-            form = json.dumps(form, encoding='utf-16')
+            form = {'Type': 'imgs',
+                    'data': f.read().encode('base64')}
+            form = json.dumps(form)
             r = requests.post("{0}:{1}".format(self.url, self.port), data=form)
         tags = json.loads(r.text)
         return tags
@@ -25,4 +25,4 @@ class Client:
 
 if __name__ == '__main__':
     client = Client()
-    print(client.img2tag("imgs/4.jpg"))
+    print(client.img2tag("imgs/download.jpg"))

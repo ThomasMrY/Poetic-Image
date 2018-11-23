@@ -19,7 +19,7 @@ def call_cv_api(image_data):
     # Read the image into a byte array
     headers = {'Ocp-Apim-Subscription-Key': subscription_key,
                'Content-Type': 'application/octet-stream'}
-    params = {'visualFeatures': 'Categories'}
+    params = {'visualFeatures': 'Description'}
     response = requests.post(
          analyze_url, headers=headers, params=params, data=image_data)
     response.raise_for_status()
@@ -29,3 +29,8 @@ def call_cv_api(image_data):
     analysis = response.json()
 
     return analysis
+
+
+if __name__ == '__main__':
+    with open('imgs/download.jpg', 'rb') as f:
+        print(call_cv_api(f.read()))

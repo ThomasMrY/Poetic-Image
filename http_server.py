@@ -2,13 +2,15 @@
 # import socketserver
 
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
-import urlparse
-import SocketServer
+# import urlparse
+# import SocketServer
 import matplotlib.pyplot as plt
 from PIL import Image
-from io import BytesIO
+# from io import BytesIO
 from cognitive_service import call_cv_api
 import json
+import base64
+from io import BytesIO
 
 """
 Very simple HTTP server in python.
@@ -47,8 +49,12 @@ class S(BaseHTTPRequestHandler):
     def process_metadata(self, metadata):
         type = metadata["Type"]
         data = metadata["data"]
-        if type == "img":
-            message = call_cv_api(data)  # tags of image
+        if type == "imgs":
+            data = base64.b64decode(data)
+            # image = Image.open(BytesIO(data))
+            # plt.imshow(image)
+            # plt.show()
+            message = json.dumps(call_cv_api(data))  # tags of image
         else:
             message = "error"
         return message

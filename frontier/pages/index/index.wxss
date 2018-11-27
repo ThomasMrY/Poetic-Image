@@ -1,7 +1,12 @@
 /**index.wxss**/
+@import "weui.wxss";
+
 .btn{
   height:50px;
-  width:100px;
+  width:200px;
+  margin-top: 20px;
+  background-color: #4DD52B;
+  color:#fff;
 }
 
 .title{

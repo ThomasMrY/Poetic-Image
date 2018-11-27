@@ -1,0 +1,10 @@
+<!--pages/index/thanks.wxml-->
+<view style='margin-top:60px;'></view>
+<view class="container">
+<view class='title'>谢谢参与!</view>
+</view>
+<view style='margin-top:30px;'></view>
+<button class='btn' bindtap="again">再玩一次吧小老弟</button>
+
+
+

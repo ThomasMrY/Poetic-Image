@@ -1,29 +1,18 @@
-// pages/index/next.js
+// pages/index/thanks.js
 Page({
 
   /**
    * Page initial data
    */
-  data: {
-
-  },
-  clickback:function(){
+  again: function () {
     wx.navigateTo({
       url: 'first'
     })
   },
-  clickCritic: function () {
-    wx.navigateTo({
-      url: 'share'
-    })
+  data: {
+
   },
-  saveim(){
-    console.log("1")
-    wx.saveImageToPhotosAlbum({
-      filePath:"imgs/img.jpg",
-      success(res) { }
-    })
-  },
+
   /**
    * Lifecycle function--Called when page load
    */

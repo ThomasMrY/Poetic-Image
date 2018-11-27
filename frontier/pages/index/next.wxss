@@ -1,6 +1,2 @@
 /* pages/index/next.wxss */
-.btn{
-  height:50px;
-  width:200px;
-  margin-top: 10px;
-}
+@import "index.wxss";

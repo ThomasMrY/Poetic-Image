@@ -1,7 +1,10 @@
 {
   "pages": [
+    "pages/index/first",
     "pages/index/index",
-    "pages/index/next"
+    "pages/index/next",
+    "pages/index/share",
+    "pages/index/thanks"
   ],
   "window": {
     "backgroundTextStyle": "light",

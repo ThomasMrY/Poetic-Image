@@ -2,23 +2,39 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var app = getApp();
 Page({
-  clickMe: function () {
-    wx.navigateTo({
-      url: 'next'
-    })
+  clickMe: function (){
+      wx.navigateTo({
+        url: 'next'
+      })
   },
   onShow: function () {
     console.log(this.route)
   },
+  onShareAppMessage() {
+    return {
+      title: 'poem',
+      path: 'page/index/index'
+    }
+  },
+
   data: {
     items: [
-      { name: '1', value: '枯藤老树昏鸦，小桥流水人家' },
-      { name: '2', value: '床前明月光，疑是地上霜' },
-      { name: '3', value: '举头望明月，低头思故乡' }
+      { value: '1', name: '枯藤老树昏鸦，小桥流水人家' },
+      { value: '2', name: '窗前明月光，疑是地上霜'  },
+      { value: '3', name: '举头望明月，低头思故乡' }
     ]
   },
-  checkboxChange: function (e) {
-    console.log('checkbox发生change事件，携带value值为：', e.detail.value)
+  radioChange(e) {
+    console.log('用户选择了', e.detail.value)
+
+    const items = this.data.items
+    for (let i = 0, len = items.length; i < len; ++i) {
+      items[i].checked = items[i].value === e.detail.value
+    }
+
+    this.setData({
+      items
+    })
   },
     onLoad: function () {
         var _this = this;

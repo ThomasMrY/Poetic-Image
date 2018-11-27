@@ -4,10 +4,10 @@ import time
 
 class DBIO(object):
     def __init__(self,
+                 username,
+                 password,
                  server='poetic-image.database.windows.net',
                  database='poetic_image',
-                 username='administor',
-                 password='PoeticImage.abc',
                  driver='{ODBC Driver 13 for SQL Server}'):
         self.server = server
         self.database = database

@@ -1,0 +1,8 @@
+<!--pages/index/next.wxml-->
+<view class="container">
+<image style="width: 200px; height: 200px; background-color: #eeeeee;" mode="{{item.mode}}" src="{{src}}"></image>
+<button class = "btn">保存</button>
+<button class = "btn">评价</button>
+<button class = "btn">分享</button>
+<button class = "btn" bindtap="clickback">返回</button>
+</view>

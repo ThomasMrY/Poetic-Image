@@ -1,0 +1,13 @@
+<!--index.wxml-->
+<view class="container">
+  <view class="title">图片对联斯密达</view>
+  <view class="section__ctn">
+        <image style="width: 200px; height: 200px; background-color: #eeeeee;" mode="{{item.mode}}" src="{{src}}"></image>
+  </view>
+  <checkbox-group bindchange="checkboxChange">
+  <label class="checkbox" wx:for="{{items}}">
+    <checkbox value="{{item.name}}" checked="{{item.checked}}"/>{{item.value}}
+  </label>
+</checkbox-group>
+  <button bindtap="clickMe" class = "btn">合成</button>
+</view>

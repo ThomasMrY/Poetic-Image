@@ -1,0 +1,10 @@
+/**index.wxss**/
+.btn{
+  height:50px;
+  width:100px;
+}
+
+.title{
+  font-size:20px;
+  color: #aaa;
+}

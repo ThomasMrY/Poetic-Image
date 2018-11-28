@@ -36,12 +36,11 @@ def get_reuslt(repsonse):
     result = json.loads(repsonse)
     return result['translateResult'][0][0]['tgt']
 
-def find_shanglian(input_info, tag_mode=1):
+def find_shanglian(input_info, tag_mode=1, final_output_number=5):
     start = time.clock()
     filename = './couplet_100k.txt'
     #input_tag_list = ['chair', 'moon','mountain']
     input_tag_list = ['moon']
-    final_result_length = 5
     input_tag_list = input_info['description']['tags']
     print(input_tag_list)
     list_trans = []
@@ -108,14 +107,14 @@ def retrieve_tag(content, result_length, tag, tag_mode=1):
             for j in range(int(len(content)/3)):
                 data_sentence = content[j*3]
                 if (data_sentence.find(tag[i]))!= -1:
-                    #result_index.append(j*3)
+                    result_index.append(j*3)
                     tag_retrieval_index.append(j*3)
                 if len(tag_retrieval_index)==result_length:
                     break
-        return tag_retrieval_index
+        return list(set(tag_retrieval_index))
 
 if __name__ == "__main__":
     with open('./download1.jpg', 'rb') as f:
         input_info = call_cv_api(f.read())
-        results = find_shanglian(input_info)
-        print(results)
+        results = find_shanglian(input_info, tag_mode=2, final_output_number=5) # tag_mode表示同义词是/否只进行一次匹配, 对应取值2/1
+        print(results)# ['思潮如江河湖海水涌', '日落长河生丽水', '江河湖海四水归一', '江河湖海滔滔水', '江河湖海皆有水']

@@ -9,7 +9,7 @@ Page({
   },
   clickback:function(){
     wx.navigateTo({
-      url: 'first'
+      url: 'index'
     })
   },
   clickCritic: function () {

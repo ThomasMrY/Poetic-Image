@@ -9,6 +9,7 @@ Page({
   },
   onShow: function () {
     console.log(this.route)
+    console.log(app.globalData.ImgSrc)
   },
   onShareAppMessage() {
     return {
@@ -18,6 +19,7 @@ Page({
   },
 
   data: {
+    srcs: app.globalData.ImgSrc,
     items: [
       { value: '1', name: '枯藤老树昏鸦，小桥流水人家' },
       { value: '2', name: '窗前明月光，疑是地上霜'  },

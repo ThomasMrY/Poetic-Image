@@ -25,5 +25,7 @@ App({
             }
         });
     },
-    globalData: {}
+  globalData: {
+    ImgSrc: null
+  }
 });

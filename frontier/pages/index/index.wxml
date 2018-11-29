@@ -1,8 +1,8 @@
 <!--index.wxml-->
 <view class="container">
-  <view class="title">图片对联斯密达</view>
+  <view class="title">图片生成对联</view>
   <view class="section__ctn">
-        <image style="width: 200px; height: 200px; background-color: #eeeeee;" mode="{{item.mode}}" src="../../imgs/img.jpg"></image>
+        <image style="width: 200px; height: 200px; background-color: #eeeeee;" mode="{{item.mode}}" src="{{srcs}}"></image>
   </view>
   <view class="page-section">
       <view class="page-section-title">生成的对联</view>

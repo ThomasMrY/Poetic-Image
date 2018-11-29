@@ -1,7 +1,9 @@
+var app = getApp();
 Page({
 
   data: {
-    images: []
+    images: [],
+    srcs:"upload.jpg"
   },
   submit: function () {
     wx.navigateTo({
@@ -9,59 +11,41 @@ Page({
     })
   },
   onLoad(options) {
-    
   },
-  /*
-  submitForm(e) {
-    const title = this.data.title
-    const content = this.data.content
-
-    if (title && content) {
-      const arr = []
-
-      //将选择的图片组成一个Promise数组，准备进行并行上传
-      for (let path of this.data.images) {
-        arr.push(wxUploadFile({
-          url: config.urls.question + '/image/upload',
-          filePath: path,
-          name: 'qimg',
-        }))
-      }
-
-      wx.showLoading({
-        title: '正在创建...',
-        mask: true
-      })
-
-      // 开始并行上传图片
-      Promise.all(arr).then(res => {
-        // 上传成功，获取这些图片在服务器上的地址，组成一个数组
-        return res.map(item => JSON.parse(item.data).url)
-      }).catch(err => {
-        console.log(">>>> upload images error:", err)
-      }).then(urls => {
-        // 调用保存问题的后端接口
-        return createQuestion({
-          title: title,
-          content: content,
-          images: urls
+  
+  submitimg:function() {
+    var that = this;
+    wx.chooseImage({
+      count: 1, // 默认9
+      sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+      sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+      success: function (res) {
+        // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+        var tempFilePaths = res.tempFilePaths;
+        app.globalData.ImgSrc = tempFilePaths[0];
+        that.data.srcs = app.globalData.ImgSrc;
+        console.log(app.globalData.ImgSrc)
+        wx.uploadFile({
+          url: 'https://localhost/',      //此处换上你的接口地址
+          filePath: tempFilePaths[0],
+          name: 'img',
+          header: {
+            "Content-Type": "multipart/form-data",
+            'accept': 'application/json',
+            'Authorization': 'Bearer ..'    //若有token，此处换上你的token，没有的话省略
+          },
+          formData: {
+            'user': 'test'  //其他额外的formdata，可不写
+          },
+          success: function (res) {
+            var data = res.data;
+            console.log('data');
+          },
+          fail: function (res) {
+            console.log('fail');
+          },
         })
-      }).then(res => {
-        // 保存问题成功，返回上一页（通常是一个问题列表页）
-        const pages = getCurrentPages();
-        const currPage = pages[pages.length - 1];
-        const prevPage = pages[pages.length - 2];
-
-        // 将新创建的问题，添加到前一页（问题列表页）第一行
-        prevPage.data.questions.unshift(res)
-        $digest(prevPage)
-
-        wx.navigateBack()
-      }).catch(err => {
-        console.log(">>>> create question error:", err)
-      }).then(() => {
-        wx.hideLoading()
-      })
-    }
-  }*/
+      }
+    })
+  }
 })

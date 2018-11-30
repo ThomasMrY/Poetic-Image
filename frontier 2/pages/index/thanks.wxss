@@ -1,0 +1,12 @@
+/* pages/index/thanks.wxss */
+.btn{
+  height:50px;
+  width:200px;
+  margin-top: 10px;
+  background-color: #4DD52B;
+  color: rgba(253, 252, 252, 0.904);
+}
+.title{
+  font-size:20px;
+  color: rgb(218, 16, 16);
+}

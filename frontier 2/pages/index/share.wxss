@@ -1,0 +1,11 @@
+/* pages/index/share.wxss */
+@import "index.wxss";
+image{
+  height: 60rpx;
+  width: 60rpx;
+  display: inline-block;
+  margin-top:30px;
+}
+page {
+  background-color: #fff;
+} 

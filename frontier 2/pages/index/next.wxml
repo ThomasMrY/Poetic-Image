@@ -1,0 +1,10 @@
+<!--pages/index/next.wxml-->
+<view class="container">
+<block wx:for="{{images}}" wx:key="*this">
+      <image class='btnImg' src="{{item}}"></image>
+    </block>
+<button class="btn" bindtap="saveim" >留做纪念</button>
+<button class = "btn" bindtap= "clickCritic">评价</button>
+<button class = "btn" open-type="share">告诉你的朋友</button>
+<button class = "btn" bindtap="clickback">返回</button>
+</view>

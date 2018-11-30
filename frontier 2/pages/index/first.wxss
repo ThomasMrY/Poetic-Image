@@ -1,0 +1,5 @@
+/* pages/first/first.wxss */
+@import "index.wxss";
+.page-section-ctn {
+  text-align: center;
+}

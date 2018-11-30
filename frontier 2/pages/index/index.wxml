@@ -1,0 +1,24 @@
+<!--index.wxml-->
+<view class="container">
+  <view class="title">图片生成对联</view>
+  <view class="section__ctn">
+      <block wx:for="{{images}}" wx:key="*this">
+      <image class='btnImg' src="{{item}}"></image>
+    </block>
+  </view>
+  <view class="page-section">
+      <view class="page-section-title">生成的对联</view>
+      <view class="weui-cells weui-cells_after-title">
+        <radio-group bindchange="radioChange">
+          <label class="weui-cell weui-check__label" wx:for="{{items}}" wx:key="{{item.value}}">
+
+            <view class="weui-cell__hd">
+              <radio value="{{item.value}}"/>
+            </view>
+            <view class="weui-cell__bd">{{item.name}}</view>
+          </label>
+        </radio-group>
+      </view>
+  </view>
+  <button bindtap="clickMe" class = "btn">合成</button>
+</view>

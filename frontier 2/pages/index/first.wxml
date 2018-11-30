@@ -1,0 +1,14 @@
+<!--pages/first/first.wxml-->
+
+<view class="container">
+  <text>上传一张图片，就能完成一幅精美对联</text>
+    <button class='btn1' bindtap='submitimg'>
+    <block wx:for="{{images}}" wx:key="*this">
+      <image class='btnImg' src="{{item}}"></image>
+    </block>
+      <view>上传图片</view>
+    </button>
+    <view class="page-section-title">提示文字</view>
+    <input name="text" placeholder="提示文字"/>
+    <button class="btn" bindtap='submit'>提交</button>
+</view>

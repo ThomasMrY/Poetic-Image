@@ -4,13 +4,15 @@
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 # import urlparse
 # import SocketServer
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from PIL import Image
 # from io import BytesIO
 from cognitive_service import call_cv_api
 import json
 import base64
 from io import BytesIO
+import time
+import os
 
 """
 Very simple HTTP server in python.
@@ -41,8 +43,15 @@ class S(BaseHTTPRequestHandler):
         # Doesn't do anything with posted data
         length = int(self.headers.getheader('content-length'))
         metadata = self.rfile.read(length)
+        datetime = time.strftime('%Y-%m-%d-%H-%M-%S')
         metadata = json.loads(metadata)
-        message = self.process_metadata(metadata)
+        if not os.path.exists('tmp'):
+            os.mkdir('tmp')
+        with open(os.path.join('tmp', datetime), 'w') as f:
+            json.dump(metadata, f)
+
+        # message = self.process_metadata(metadata)
+        message = json.dumps({'message': 'hi'})
         self._set_headers()
         self.wfile.write(message)
 

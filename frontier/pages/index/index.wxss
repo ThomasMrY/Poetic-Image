@@ -9,6 +9,13 @@
   color:#fff;
 }
 
+.btn2{
+  height:50px;
+  width:200px;
+  margin-top: 20px;
+  color:#fff;
+}
+
 .title{
   font-size:20px;
   color: #aaa;

@@ -10,9 +10,13 @@ Page({
     two_1: '',
     one_2: 0,
     two_2: 5,
+    eflag:false,
+    star:false,
+    emotion:"",
+    pageBackgroundColor: '#BBBBBB',
     items: [
       { name: 'SAD', value: '伤心' },
-      { name: 'HAPPY', value: '开心', checked: 'true' },
+      { name: 'HAPPY', value: '开心'},
       { name: 'ANGRY', value: '急眼' },
       { name: 'MOVE', value: '感动哭了' },
       //{ name: 'ENG', value: '英国' },
@@ -21,12 +25,41 @@ Page({
   },
   radioChange: function (e) {
     console.log('radio发生change事件，携带value值为：', e.detail.value)
+    this.setData({
+      eflag:true,
+      emotion: e.detail.value
+    })
+    if(this.data.star){
+      this.setData({
+        pageBackgroundColor: '#4DD52B',
+      })
+    }
   },
   submit_l:function(){
-    wx.navigateTo({
-      url: 'thanks'
-    })
+    var that = this
+    if (this.data.star& this.data.eflag) {
+      console.log(this.data.one_2)
+      console.log(this.data.emotion)
+      wx.request({
+        url: "https://iotofmine.oicp.io:55028",
+        method: "POST",
+        data: {
+          stars: that.data.one_2,
+          emotions:that.data.emotion
+        },
+        header: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        success: function (res) {
+          console.log("上传成功")
+        },
+      })
+      wx.navigateTo({
+        url: 'thanks'
+      })
+    }
   },
+
   /**
    * Lifecycle function--Called when page load
    */
@@ -40,18 +73,24 @@ Page({
   onReady: function () {
 
   },
-  in_xin: function (e) {
+  in_xin: function (e) {  //in_xin是个变量，one_2是5，two_2是0
     var in_xin = e.currentTarget.dataset.in;
     var one_2;
-    if (in_xin === 'use_sc2') {
+    if (in_xin === 'use_sc2') {   //界面在星星上
       one_2 = Number(e.currentTarget.id);
     } else {
       one_2 = Number(e.currentTarget.id) + this.data.one_2;
     }
     this.setData({
       one_2: one_2,
-      two_2: 5 - one_2
+      two_2: 5 - one_2,
+      star:true
     })
+    if (this.data.eflag) {
+      this.setData({
+        pageBackgroundColor: '#4DD52B',
+      })
+    }
   },
   /**
    * Lifecycle function--Called when page show

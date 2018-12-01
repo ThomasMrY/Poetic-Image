@@ -1,13 +1,14 @@
 <!--pages/index/share.wxml-->
 <view class="container">
 <text>请评价我们的对联</text>
+<image style='width: 100px; height: 100px;' class='btnImg' src='upload.jpg'></image>
 </view>
-<view style='margin-top:20px;'>1.对联评分</view>
+<view>1.对联评分</view>
 <block wx:for="{{one_2}}" wx:key="index">
-<image catchtap='in_xin' id='{{index+1}}' data-in='use_sc2' src='../starfull1.PNG'></image>
+<image style='background-color: #eeeeee;' catchtap='in_xin' id='{{index+1}}' data-in='use_sc2' src='../starfull.jpg'></image>
 </block>
 <block wx:for="{{two_2}}" wx:key="index">
-<image catchtap='in_xin' id='{{index+1}}' data-in='use_sc' src='../starempty1.PNG'></image>
+<image catchtap='in_xin' id='{{index+1}}' data-in='use_sc' src='../starempty.jpg'></image>
 </block>
 <view>{{one_2}}星</view>
 <view style='margin-top:20px;'></view>
@@ -18,6 +19,5 @@
   </label>
 </radio-group>
 <view style='margin-top:20px;'></view>
-<button class="btn" bindtap="submit_l" size="{{primarySize}} bindtap='clickme'"> submit </button>
-
+<button class="btn" style="background-color:{{pageBackgroundColor}}" bindtap="submit_l" size="{{primarySize}} bindtap='clickme'"> submit </button>
 

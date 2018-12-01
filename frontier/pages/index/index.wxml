@@ -2,7 +2,9 @@
 <view class="container">
   <view class="title">图片生成对联</view>
   <view class="section__ctn">
-        <image style="width: 200px; height: 200px; background-color: #eeeeee;" mode="{{item.mode}}" src="{{srcs}}"></image>
+      <block wx:for="{{images}}" wx:key="*this">
+      <image class='btnImg' src="{{item}}"></image>
+    </block>
   </view>
   <view class="page-section">
       <view class="page-section-title">生成的对联</view>
@@ -18,5 +20,5 @@
         </radio-group>
       </view>
   </view>
-  <button bindtap="clickMe" class = "btn">合成</button>
+  <button bindtap="clickMe" style="background-color:{{pageBackgroundColor}}" class = "btn2">合成</button>
 </view>

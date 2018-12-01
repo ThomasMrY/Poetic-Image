@@ -1,14 +1,40 @@
 var app = getApp();
 Page({
-
   data: {
-    images: [],
-    srcs:"upload.jpg"
+    images: ["upload.jpg"],
+    msg:"",
+    upload:false,
+    pageBackgroundColor:'#BBBBBB'
+  },
+
+  Input: function (e) {
+    this.setData({
+      msg: e.detail.value
+    })
   },
   submit: function () {
+    var that = this;
+    if(this.data.upload){
+    console.log(this.data.msg);
+    wx.request({
+      url: "https://iotofmine.oicp.io:55028",
+      method: "POST",
+      data: {
+        img: app.globalData.ImgSrc,
+        msg: that.data.msg
+      },
+      header: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      success: function (res) {
+        console.log(res.data);
+        console.log("上传成功")
+      },
+    })
     wx.navigateTo({
       url: 'index'
     })
+    }
   },
   onLoad(options) {
   },
@@ -23,27 +49,10 @@ Page({
         // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
         var tempFilePaths = res.tempFilePaths;
         app.globalData.ImgSrc = tempFilePaths[0];
-        that.data.srcs = app.globalData.ImgSrc;
-        console.log(app.globalData.ImgSrc)
-        wx.uploadFile({
-          url: 'https://localhost/',      //此处换上你的接口地址
-          filePath: tempFilePaths[0],
-          name: 'img',
-          header: {
-            "Content-Type": "multipart/form-data",
-            'accept': 'application/json',
-            'Authorization': 'Bearer ..'    //若有token，此处换上你的token，没有的话省略
-          },
-          formData: {
-            'user': 'test'  //其他额外的formdata，可不写
-          },
-          success: function (res) {
-            var data = res.data;
-            console.log('data');
-          },
-          fail: function (res) {
-            console.log('fail');
-          },
+        that.setData({
+          images: [app.globalData.ImgSrc],
+pageBackgroundColor:'#4DD52B',
+upload:true
         })
       }
     })

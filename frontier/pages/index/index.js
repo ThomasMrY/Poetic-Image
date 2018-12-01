@@ -1,25 +1,33 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 var app = getApp();
+
 Page({
   clickMe: function (){
+    var that = this
+    if(this.data.choose){
+    console.log(this.data.choice)
+    wx.request({
+      url: "https://iotofmine.oicp.io:55028",
+      method: "POST",
+      data: {
+        msg: that.data.choice
+      },
+      header: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      success: function (res) {
+        console.log("上传成功")
+        console.log(res.data)
+      },
+    })
       wx.navigateTo({
         url: 'next'
-      })
+      })}
   },
-  onShow: function () {
-    console.log(this.route)
-    console.log(app.globalData.ImgSrc)
-  },
-  onShareAppMessage() {
-    return {
-      title: 'poem',
-      path: 'page/index/index'
-    }
-  },
-
+  
   data: {
-    srcs: app.globalData.ImgSrc,
+    choice: 0,
+    pageBackgroundColor: '#BBBBBB',
+    choose:false,
     items: [
       { value: '1', name: '枯藤老树昏鸦，小桥流水人家' },
       { value: '2', name: '窗前明月光，疑是地上霜'  },
@@ -27,21 +35,24 @@ Page({
     ]
   },
   radioChange(e) {
-    console.log('用户选择了', e.detail.value)
-
+    this.data.choice = e.detail.value
     const items = this.data.items
     for (let i = 0, len = items.length; i < len; ++i) {
       items[i].checked = items[i].value === e.detail.value
     }
 
     this.setData({
-      items
+      items,
+      pageBackgroundColor:'#4DD52B',
+      choose:true
     })
   },
     onLoad: function () {
         var _this = this;
+        console.log(app.globalData.ImgSrc)
         if (app.globalData.userInfo) {
             this.setData({
+                images: [app.globalData.ImgSrc],
                 userInfo: app.globalData.userInfo,
                 hasUserInfo: true,
             });
@@ -66,12 +77,4 @@ Page({
             });
         }
     },
-    getUserInfo: function (e) {
-        console.log(e);
-        app.globalData.userInfo = e.detail.userInfo;
-        this.setData({
-            userInfo: e.detail.userInfo,
-            hasUserInfo: true
-        });
-    }
 });

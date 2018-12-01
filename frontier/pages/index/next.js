@@ -1,11 +1,13 @@
 // pages/index/next.js
+var app = getApp();
+
 Page({
 
   /**
    * Page initial data
    */
   data: {
-
+    
   },
   clickback:function(){
     wx.navigateTo({
@@ -28,7 +30,9 @@ Page({
    * Lifecycle function--Called when page load
    */
   onLoad: function (options) {
-
+    this.setData({
+      images: [app.globalData.ImgSrc],
+    });
   },
 
   /**

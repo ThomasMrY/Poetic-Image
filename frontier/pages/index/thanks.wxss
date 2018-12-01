@@ -3,8 +3,8 @@
   height:50px;
   width:200px;
   margin-top: 10px;
-  background-color: #08c6e7;
-  color: rgb(218, 16, 16);
+  background-color: #4DD52B;
+  color: rgba(253, 252, 252, 0.904);
 }
 .title{
   font-size:20px;

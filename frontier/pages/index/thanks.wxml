@@ -1,9 +1,12 @@
 <!--pages/index/thanks.wxml-->
-<view style='margin-top:60px;'></view>
-<view class="container">
-<view class='title'>谢谢参与!</view>
-</view>
+<view style='margin-top:100px;'></view>
+  <view class="container">
+    <image style='width: 200px; height: 160px;' class='btnImg' src='upload.jpg'></image>
+    <view style='margin-top:50px;'></view>
+    <view class='title'>谢谢使用!</view>
+  </view>
 <view style='margin-top:30px;'></view>
+
 <button class='btn' bindtap="again">再玩一次吧小老弟</button>
 
 

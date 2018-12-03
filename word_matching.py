@@ -1,120 +1,66 @@
-import time
-from multiprocessing.dummy import Pool as ThreadPool
-from functools import partial
-import sys
-import json
-import requests
-import synonyms
-from RS import call_cv_api
+# coding=utf-8
+from PIL import Image, ImageDraw, ImageFont
+import matplotlib.pyplot as plt
+import numpy as np
+import cv2
 
-def translate(word):
-    # 有道词典 api
-    url = 'http://fanyi.youdao.com/translate?smartresult=dict&smartresult=rule&smartresult=ugc&sessionFrom=null'
-    # 传输的参数，其中 i 为需要翻译的内容
-    key = {
-        'type': "AUTO",
-        'i': word,
-        "doctype": "json",
-        "version": "2.1",
-        #'from': 'AUTO',
-        #'to': 'Chinese',
-        "keyfrom": "fanyi.web",
-        "ue": "UTF-8",
-        "action": "FY_BY_CLICKBUTTON",
-        "typoResult": "true"
-    }
-    # key 这个字典为发送给有道词典服务器的内容
-    response = requests.post(url, data=key)
-    # 判断服务器是否相应成功
-    if response.status_code == 200:
-        return response.text
-    else:
-        #print("有道词典调用失败")
-        return None
 
-def get_reuslt(repsonse):
-    result = json.loads(repsonse)
-    return result['translateResult'][0][0]['tgt']
+# im = Image.open(r"imgs/background.jpg")
+# draw = ImageDraw.Draw(im)
+# myfont = ImageFont.truetype(u"D:\\ASE\\Poetic-Image\\imgs\\font1556\\handwriting.ttf", size=35)
+# fillcolor = 'black'
+# draw.text((350, 400), u"还有谁！！", font=myfont, fill=fillcolor)
+# plt.figure('abc')
+# plt.imshow(im)
+# plt.show()
 
-def find_shanglian(input_info, tag_mode=1, final_output_number=5):
-    start = time.clock()
-    filename = './couplet_100k.txt'
-    #input_tag_list = ['chair', 'moon','mountain']
-    input_tag_list = ['moon']
-    input_tag_list = input_info['description']['tags']
-    print(input_tag_list)
-    list_trans = []
-    final_input_tag_list = []
-    for i in range(len(input_tag_list)):
-        list_trans.append(get_reuslt(translate(input_tag_list[i])))
-    print(list_trans)
-    list_trans = list(set(list_trans))
-    print(list_trans)
-    for i in range(len(list_trans)):
-        synonyms_words = synonyms.nearby(list_trans[i])
-        d=dict(zip(synonyms_words[0],synonyms_words[1]))
-        synonyms_words = [k for k,v in d.items() if v >=0.7]
-        if tag_mode==1:
-            final_input_tag_list += synonyms_words[:3]
-        else:
-            final_input_tag_list.append(synonyms_words[:3])
-    retrieval_results = []
-    print(final_input_tag_list)
-    with open(filename, 'r', encoding='utf-8') as in_file:
-        all_lines = in_file.readlines()
-    ''' # much slower?
-    pool = ThreadPool()
-    func = partial(retrieve_tag, all_lines, -1)
-    pool.map(func, input_tag_list)
-    pool.close()
-    pool.join()
-    '''
-    for i in range(len(final_input_tag_list)):
-        if tag_mode==1:
-            tag = final_input_tag_list[i]
-            #tag_retrieval_result = retrieve_tag(all_lines,result_length = retrieval_result_length, tag )
-            tag_retrieval_result = retrieve_tag(all_lines,-1, tag)
-            retrieval_results+=tag_retrieval_result
-        else:
-            tag = final_input_tag_list[i]
-            tag_retrieval_result = retrieve_tag(all_lines,-1, tag, tag_mode=2)
-            retrieval_results+=tag_retrieval_result
-    #'''
-    results = {}
-    for i in retrieval_results:
-        results[i] = results.get(i, 0) + 1 
-    results = sorted(results.items(), key=lambda item: item[1], reverse=True)
-    output_results_index = [index[0] for index in results[:final_result_length]]
-    print ([index[1] for index in results[:final_result_length]])
-    results = [all_lines[i][:-1] for i in output_results_index]
-    #tic = time.clock()-start
-    #print(tic)
-    return results
+def gen_cir_mask(w, h):
+    m_x, m_y = np.meshgrid(np.arange(w), np.arange(h))
+    c_x = (w-1) / 2.0
+    c_y = (h-1) / 2.0
+    soft_mask = (m_x - c_x) ** 2 / (c_x ** 2) + (m_y - c_y) ** 2 / (c_y ** 2)
+    Z = np.where(soft_mask<0.95, np.ones_like(soft_mask), np.zeros_like(soft_mask))
+    Z_2 = np.where(abs(soft_mask-0.975)<0.025, np.ones_like(soft_mask), np.zeros_like(soft_mask))
+    #Z_2 = np.where((1-soft_mask)<0.05, np.ones_like(soft_mask), np.zeros_like(soft_mask))
+    return Z, Z_2
+def generate_final_image(user_image_path="imgs/download.jpg", background_image_path="./bg.jpg", poeitcs=["Sample Text 1", "Sample Text 1"], output_path='./output.jpeg'):
 
-def retrieve_tag(content, result_length, tag, tag_mode=1):
-    tag_retrieval_index = []
-    if tag_mode==1:
-        for j in range(int(len(content)/3)):
-            data_sentence = content[j*3]
-            if (data_sentence.find(tag))!= -1:
-                tag_retrieval_index.append(j*3)
-            if len(tag_retrieval_index)==result_length:
-                break
-        return tag_retrieval_index
-    elif tag_mode==2:
-        for i in range(len(tag)):
-            result_index = []
-            for j in range(int(len(content)/3)):
-                data_sentence = content[j*3]
-                if (data_sentence.find(tag[i]))!= -1:
-                    result_index.append(j*3)
-                    tag_retrieval_index.append(j*3)
-                if len(tag_retrieval_index)==result_length:
-                    break
-        return list(set(tag_retrieval_index))
+    im = Image.open(user_image_path)
+    image = np.asarray(im)
+    h, w, c= np.shape(image)
+    #print(h,w,c,width, height)
+
+    bg_img_2 =  Image.open(background_image_path) # background image
+    bg_img_2_resized = bg_img_2.resize((800,600), Image.ANTIALIAS)
+    bg_crop= np.asarray(np.asarray(bg_img_2_resized))[0:h, 0:w,:]
+
+    mask,mask_2 = gen_cir_mask(w, h)
+    mask =  np.transpose(np.repeat(np.expand_dims(mask,0), 3, axis=0), (1,2,0))
+    mask_2 =  np.transpose(np.repeat(np.expand_dims(mask_2,0), 3, axis=0), (1,2,0))
+
+    #word_font = ImageFont.truetype("arial.ttf", 40)
+    word_font = ImageFont.truetype(u"./handwriting.ttf", size=35)
+
+    # generate mask
+    image = np.asarray(im)
+    image_2 = np.where(mask==1, image,bg_crop)
+    image_2 = np.where(mask_2==1, 0, image_2)
+
+    im_2 = Image.fromarray(np.uint8(image_2))
+    im_resized = im_2.resize((500,300), Image.ANTIALIAS)
+    pic_height, pic_width,_ = np.shape(im_resized)
+    bg_height, bg_width,_ = np.shape(bg_img_2_resized)
+    top_left_h = int(bg_height*0.7/2-pic_height/2)
+    top_left_w = int(bg_width/2 - pic_width/2)
+    bg_img_2_resized.paste(im_resized, (top_left_w,top_left_h))
+
+    draw_whole = ImageDraw.Draw(bg_img_2_resized)
+    draw_whole.text((300, 400), poeitcs[0], (0,0,0), font=word_font)
+    draw_whole.text((300, 500), poeitcs[1], (0,0,0),font=word_font)
+    #plt.imshow(bg_img_2_resized)
+
+    bg_img_2_resized.save(output_path, 'jpeg')
+    return bg_img_2_resized
 
 if __name__ == "__main__":
-    with open('./download1.jpg', 'rb') as f:
-        input_info = call_cv_api(f.read())
-        results = find_shanglian(input_info, tag_mode=2, final_output_number=5) # tag_mode表示同义词是/否只进行一次匹配, 对应取值2/1
-        print(results)# ['思潮如江河湖海水涌', '日落长河生丽水', '江河湖海四水归一', '江河湖海滔滔水', '江河湖海皆有水']
+    final_output_image = generate_final_image()

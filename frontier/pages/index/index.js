@@ -6,13 +6,13 @@ Page({
     if(this.data.choose){
     console.log(this.data.choice)
     wx.request({
-      url: "https://iotofmine.oicp.io:55028",
+      url: "http://poeticimage.eastus.cloudapp.azure.com:8000/",
       method: "POST",
       data: {
-        msg: that.data.choice
+        choice: that.data.choice
       },
       header: {
-        "Content-Type": "application/x-www-form-urlencoded"
+        "Content-Type": "application/json"
       },
       success: function (res) {
         console.log("上传成功")

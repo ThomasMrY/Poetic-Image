@@ -16,21 +16,18 @@ Page({
     var that = this;
     if(this.data.upload){
     console.log(this.data.msg);
-    wx.request({
-      url: "https://iotofmine.oicp.io:55028",
-      method: "POST",
-      data: {
-        img: app.globalData.ImgSrc,
-        msg: that.data.msg
-      },
-      header: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      success: function (res) {
-        console.log(res.data);
-        console.log("上传成功")
-      },
-    })
+      wx.uploadFile({
+        url: 'http://poeticimage.eastus.cloudapp.azure.com:8000/', //仅为示例，非真实的接口地址
+        filePath: app.globalData.ImgSrc,
+        name: 'file',
+        formData: {
+          'msg': that.data.msg
+        },
+        success(res) {
+          const data = res.data
+          console.log("上传成功！")
+        }
+      })
     wx.navigateTo({
       url: 'index'
     })

@@ -1,5 +1,6 @@
 from requests_toolbelt import MultipartDecoder
-
+from PIL import Image
+from io import BytesIO
 
 with open("tmp/2018-12-03-14-32-53", "r") as f:
     metadata = f.read()

@@ -38,7 +38,7 @@ def do_selected_poetry(metadata):
         os.mkdir('syn_images')
     shutil.copy('raw_images/{}.jpg'.format(id), 'syn_images/{}_syn.jpg'.format(id))
 
-    base_url = 'poeticimage.eastus.cloudapp.azure.com:8080'
+    base_url = 'http://poeticimage.eastus.cloudapp.azure.com:8080'
     img_url = '{}/syn_images/{}_syn.jpg'.format(base_url, id)
 
     form = {'id': id,

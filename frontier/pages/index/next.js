@@ -31,7 +31,7 @@ Page({
    */
   onLoad: function (options) {
     this.setData({
-      images: [app.globalData.ImgSrc],
+      images: [app.globalData.NewImgSrc],
     });
   },
 

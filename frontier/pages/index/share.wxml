@@ -19,5 +19,6 @@
   </label>
 </radio-group>
 <view style='margin-top:20px;'></view>
-<button class="btn" style="background-color:{{pageBackgroundColor}}" bindtap="submit_l" size="{{primarySize}} bindtap='clickme'"> submit </button>
+<button class="btn" style="background-color:{{pageBackgroundColor}};display:{{bool_display}}" bindtap="submit_l" size="{{primarySize}} bindtap='clickme'"> submit </button>
+<loading hidden="{{hiddenflag}}">正在提交...</loading>
 

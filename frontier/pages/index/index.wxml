@@ -20,5 +20,6 @@
         </radio-group>
       </view>
   </view>
-  <button bindtap="clickMe" style="background-color:{{pageBackgroundColor}}" class = "btn2">合成</button>
+  <button bindtap="clickMe" style="background-color:{{pageBackgroundColor}};display:{{bool_display}}" class = "btn2">合成</button>
 </view>
+<loading hidden="{{hiddenflag}}">正在提交...</loading>

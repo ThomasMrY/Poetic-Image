@@ -1,4 +1,5 @@
 // pages/index/share.js
+var app = getApp();
 Page({
 
   /**
@@ -14,13 +15,13 @@ Page({
     star:false,
     emotion:"",
     pageBackgroundColor: '#BBBBBB',
+    bool_display:'block',
+    hiddenflag:true,
     items: [
       { name: 'SAD', value: '伤心' },
       { name: 'HAPPY', value: '开心'},
       { name: 'ANGRY', value: '急眼' },
       { name: 'MOVE', value: '感动哭了' },
-      //{ name: 'ENG', value: '英国' },
-      //{ name: 'TUR', value: '法国' },
     ]
   },
   radioChange: function (e) {
@@ -37,6 +38,10 @@ Page({
   },
   submit_l:function(){
     var that = this
+    this.setData({
+      bool_display: 'none',
+      hiddenflag:false,
+    })
     if (this.data.star& this.data.eflag) {
       console.log(this.data.one_2)
       console.log(this.data.emotion)
@@ -44,6 +49,8 @@ Page({
         url: "http://poeticimage.eastus.cloudapp.azure.com:8000/",
         method: "POST",
         data: {
+          type:"comment",
+          id:app.globalData.id,
           stars: that.data.one_2,
           emotions:that.data.emotion
         },

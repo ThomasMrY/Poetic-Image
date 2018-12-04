@@ -10,5 +10,6 @@
     </button>
     <view class="page-section-title">提示文字</view>
     <input name="text" bindinput="Input" placeholder="提示文字"/>
-    <button class="btn2" bindtap='submit' style="background-color:{{pageBackgroundColor}}">提交</button>
+    <button class="btn2" bindtap='submit' style="background-color:{{pageBackgroundColor}};display:{{bool_display}}">提交</button>
 </view>
+<loading hidden="{{hiddenflag}}">正在提交...</loading>

@@ -26,6 +26,11 @@ App({
         });
     },
   globalData: {
-    ImgSrc: null
+    ImgSrc: null,
+    NewImgSrc:null,
+    Pom1:null,
+    pom2:null,
+    pom3:null,
+    id:null
   }
 });

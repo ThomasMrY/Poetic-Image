@@ -4,7 +4,9 @@ Page({
     images: ["upload.jpg"],
     msg:"",
     upload:false,
-    pageBackgroundColor:'#BBBBBB'
+    pageBackgroundColor:'#BBBBBB',
+    bool_display: 'block',
+    hiddenflag: true,
   },
 
   Input: function (e) {
@@ -14,6 +16,11 @@ Page({
   },
   submit: function () {
     var that = this;
+    var back = false;
+    this.setData({
+      bool_display: 'none',
+      hiddenflag: false,
+    })
     if(this.data.upload){
     console.log(this.data.msg);
       wx.uploadFile({
@@ -25,12 +32,21 @@ Page({
         },
         success(res) {
           const data = res.data
+          var jdata;
+          jdata = JSON.parse(data)
           console.log("上传成功！")
+          console.log(jdata)
+          console.log(jdata.id)
+          app.globalData.id = jdata.id
+          app.globalData.Pom1 = jdata.poetry1
+          app.globalData.Pom2 = jdata.poetry2
+          app.globalData.Pom3 = jdata.poetry3
+          back = true
+          wx.navigateTo({
+            url: 'index'
+          })
         }
-      })
-    wx.navigateTo({
-      url: 'index'
-    })
+      })      
     }
   },
   onLoad(options) {

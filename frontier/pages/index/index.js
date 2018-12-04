@@ -3,40 +3,64 @@ var app = getApp();
 Page({
   clickMe: function (){
     var that = this
+    this.setData({
+      bool_display: 'none',
+      hiddenflag: false,
+    })
     if(this.data.choose){
     console.log(this.data.choice)
     wx.request({
       url: "http://poeticimage.eastus.cloudapp.azure.com:8000/",
       method: "POST",
       data: {
+        type:"select",
+        id:app.globalData.id,
         choice: that.data.choice
       },
       header: {
         "Content-Type": "application/json"
       },
       success: function (res) {
-        console.log("上传成功")
-        console.log(res.data)
+        const data = res.data
+        console.log("上传成功！")
+        console.log(data)
+        console.log(data.id)
+        console.log(data.url)
+        app.globalData.id = data.id
+        wx.downloadFile({
+          url: data.url, //仅为示例，并非真实的资源
+          success(res) {
+            // 下载图片更改链接
+            if (res.statusCode === 200) {
+              console.log("图片下载成功！！")
+              app.globalData.NewImgSrc = res.tempFilePath
+              wx.navigateTo({
+                url: 'next'
+              })
+            }
+          },
+          fail(res){
+            console.log(res.statusCode)
+            console.log("下载失败！！")
+          }
+        })
       },
     })
-      wx.navigateTo({
-        url: 'next'
-      })}
+    }
   },
   
   data: {
     choice: 0,
     pageBackgroundColor: '#BBBBBB',
     choose:false,
-    items: [
-      { value: '1', name: '枯藤老树昏鸦，小桥流水人家' },
-      { value: '2', name: '窗前明月光，疑是地上霜'  },
-      { value: '3', name: '举头望明月，低头思故乡' }
-    ]
+    items:"",
+    bool_display: 'block',
+    hiddenflag: true,
   },
   radioChange(e) {
     this.data.choice = e.detail.value
     const items = this.data.items
+    
     for (let i = 0, len = items.length; i < len; ++i) {
       items[i].checked = items[i].value === e.detail.value
     }
@@ -49,7 +73,17 @@ Page({
   },
     onLoad: function () {
         var _this = this;
+      console.log(app.globalData.Pom1)
+      console.log(app.globalData.Pom2)
+      console.log(app.globalData.Pom3)
         console.log(app.globalData.ImgSrc)
+        this.setData({
+          items: [
+            { value: '1', name: app.globalData.Pom1 },
+            { value: '2', name: app.globalData.Pom2 },
+            { value: '3', name: app.globalData.Pom3 }
+          ]
+        })
         if (app.globalData.userInfo) {
             this.setData({
                 images: [app.globalData.ImgSrc],

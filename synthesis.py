@@ -37,7 +37,7 @@ def generate_final_image(user_image_path="imgs/download.jpg", background_image_p
     mask_2 =  np.transpose(np.repeat(np.expand_dims(mask_2,0), 3, axis=0), (1,2,0))
 
     #word_font = ImageFont.truetype("arial.ttf", 40)
-    word_font = ImageFont.truetype(u"./handwriting.ttf", size=35)
+    word_font = ImageFont.truetype(u"./imgs/handwriting.ttf", size=35)
 
     # generate mask
     image = np.asarray(im)

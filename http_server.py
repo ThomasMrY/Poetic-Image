@@ -1,7 +1,7 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
+# from http.server import BaseHTTPRequestHandler, HTTPServer
 # import socketserver
 
-# from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
+from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 # import urlparse
 # import SocketServer
 # import matplotlib.pyplot as plt
@@ -14,8 +14,13 @@ from io import BytesIO
 import time
 import os
 from utils import *
-
-
+import sys
+sys.path.append(r'./code/test_model/')
+sys.path.append(r'./code/test_model/tensor2tensor-1.2.9/')
+sys.path.append(r'./code/test_model/tensor2tensor-1.2.9/tensor2tensor/bin/')
+sys.path.append(r'./code/test_model/tensor2tensor-1.2.9/tensor2tensor/')
+import up2down_class
+# tensor2tensor-1.2.9/tensor2tensor/bin/up2down_class.py
 """
 Very simple HTTP server in python.
 Usage::
@@ -28,8 +33,10 @@ Send a POST request::
     curl -d "foo=bar&bin=baz" http://localhost
 """
 
-
 class S(BaseHTTPRequestHandler):
+    def __init__(self):
+        self.generate_model = up2down_class.up2down_class()
+
     def _set_headers(self):
         self.send_response(200)
         self.send_header('Content-type', 'text/html')
@@ -37,7 +44,7 @@ class S(BaseHTTPRequestHandler):
 
     def do_GET(self):
         self._set_headers()
-        self.wfile.write('<html><body><h1>hi!</h1></body></html>'.encode())
+        self.wfile.write("<html><body><h1>hi!</h1></body></html>")
 
     def do_HEAD(self):
         self._set_headers()
@@ -56,7 +63,7 @@ class S(BaseHTTPRequestHandler):
         # message = self.process_metadata(metadata)
         # message = json.dumps({'message': 'hi'})
         self._set_headers()
-        self.wfile.write(message.encode())
+        self.wfile.write(message)
 
     def process_metadata(self, metadata):
         # type = metadata["Type"]
@@ -70,7 +77,7 @@ class S(BaseHTTPRequestHandler):
         # else:
         #     message = "error"
         if metadata[:2] == '--':
-            message = do_upload_image(metadata)
+            message = do_upload_image(self.generate_model, metadata)
         else:
             metadata = json.loads(metadata)
             if metadata['type'] == 'select':

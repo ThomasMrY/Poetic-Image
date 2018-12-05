@@ -200,8 +200,11 @@ def decode_from_dataset(estimator,
     tf.logging.info("Completed inference on %d samples." % num_predictions)  # pylint: disable=undefined-loop-variable
 
 
-def decode_from_file(estimator, filename, decode_hp, decode_to_file=None):
+def decode_from_file(estimator, filename, decode_hp, decode_to_file=None, input_sentence=None):
   """Compute predictions on entries in filename and write them out."""
+  if not input_sentence:
+    tf.logging.info("No input")
+    exit(1)
   if not decode_hp.batch_size:
     decode_hp.batch_size = 32
     tf.logging.info(
@@ -218,7 +221,7 @@ def decode_from_file(estimator, filename, decode_hp, decode_to_file=None):
   problem_name = FLAGS.problems.split("-")[problem_id]
   tf.logging.info("Performing decoding from a file.")
   sorted_inputs, sorted_keys = _get_sorted_inputs(filename, decode_hp.shards,
-                                                  decode_hp.delimiter)
+                                                  decode_hp.delimiter, input_sentence)
   num_decode_batches = (len(sorted_inputs) - 1) // decode_hp.batch_size + 1
 
   def input_fn():
@@ -262,11 +265,13 @@ def decode_from_file(estimator, filename, decode_hp, decode_to_file=None):
     base_filename = output_filename + ("%.2d" % decode_hp.shard_id)
   else:
     base_filename = output_filename
-  decode_filename = _decode_filename(base_filename, problem_name, decode_hp)
-  tf.logging.info("Writing decodes into %s" % decode_filename)
-  outfile = tf.gfile.Open(decode_filename, "w")
-  for index in range(len(sorted_inputs)):
-    outfile.write("%s%s" % (decodes[sorted_keys[index]], decode_hp.delimiter))
+  assert len(sorted_inputs) == 1
+  return decodes[sorted_keys[0]]
+  #decode_filename = _decode_filename(base_filename, problem_name, decode_hp)
+  #tf.logging.info("Writing decodes into %s" % decode_filename)
+  #outfile = tf.gfile.Open(decode_filename, "w")
+  #for index in range(len(sorted_inputs)):
+  #  outfile.write("%s%s" % (decodes[sorted_keys[index]], decode_hp.delimiter))
 
 
 def _decode_filename(base_filename, problem_name, decode_hp):
@@ -337,6 +342,7 @@ def decode_interactively(estimator, decode_hp):
       else:
         tf.logging.info(
             targets_vocab.decode(_save_until_eos(result["outputs"], is_image)))
+    return targets_vocab.decode(_save_until_eos(result["outputs"], is_image))
 
 
 def _decode_batch_input_fn(problem_id, num_decode_batches, sorted_inputs,
@@ -488,7 +494,7 @@ def show_and_save_image(img, save_path):
   plt.savefig(save_path)
 
 
-def _get_sorted_inputs(filename, num_shards=1, delimiter="\n"):
+def _get_sorted_inputs(filename, num_shards=1, delimiter="\n", input_sentence=None):
   """Returning inputs sorted according to length.
 
   Args:
@@ -508,13 +514,14 @@ def _get_sorted_inputs(filename, num_shards=1, delimiter="\n"):
   else:
     decode_filename = filename
 
-  with tf.gfile.Open(decode_filename) as f:
-    text = f.read()
-    records = text.split(delimiter)
-    inputs = [record.strip() for record in records]
-    # Strip the last empty line.
-    if not inputs[-1]:
-      inputs.pop()
+  #with tf.gfile.Open(decode_filename) as f:
+  #  text = f.read()
+  #  records = text.split(delimiter)
+  #  inputs = [record.strip() for record in records]
+  #  # Strip the last empty line.
+  #  if not inputs[-1]:
+  #    inputs.pop()
+  inputs=[input_sentence]
   input_lens = [(i, len(line.split())) for i, line in enumerate(inputs)]
   sorted_input_lens = sorted(input_lens, key=operator.itemgetter(1))
   # We'll need the keys to rearrange the inputs back into their original order

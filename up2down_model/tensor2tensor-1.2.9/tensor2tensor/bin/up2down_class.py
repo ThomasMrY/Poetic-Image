@@ -33,14 +33,28 @@ flags.DEFINE_string("schedule", "train_and_evaluate",
                     "Must be train_and_evaluate for decoding.")
 
 
+home = '/home/administor/code/test_model'
+FLAGS.t2t_usr_dir = home + '/usr_dir'
+FLAGS.data_dir = home + '/data_dir'
+FLAGS.output_dir =  home + '/model'
+FLAGS.problems = 'translate_up2down'
+FLAGS.model = 'transformer'
+FLAGS.hparams = 'batch_size=1024'
+FLAGS.hparams_set = 'transformer_small'
+FLAGS.decode_hparams = "beam_size=4,alpha=0.6,batch_size=32"
+FLAGS.input_sentence = "花 开 花 落"
+FLAGS.decode_shards = 1
+FLAGS.worker_id = 1
+FLAGS.decode_from_file = True
+FLAGS.decode_to_file = True
+
 class up2down_class:
   def __init__(self):
-    input_sentence = "花 开 花 落"
+
     tf.logging.set_verbosity(tf.logging.INFO)
     usr_dir.import_usr_dir(FLAGS.t2t_usr_dir)
     trainer_utils.log_registry()
-    trainer_utils.validate_flags()
-    assert FLAGS.schedule == "train_and_evaluate"
+    #trainer_utils.validate_flags()
     self.data_dir = os.path.expanduser(FLAGS.data_dir)
     self.output_dir = os.path.expanduser(FLAGS.output_dir)
 
@@ -57,7 +71,7 @@ class up2down_class:
     self.decode_hp.add_hparam("shards", FLAGS.decode_shards)
     self.decode_hp.add_hparam("shard_id", FLAGS.worker_id)
     output_sentence = decoding.decode_from_file(self.estimator, FLAGS.decode_from_file, self.decode_hp,
-                                FLAGS.decode_to_file, input_sentence=input_sentence)
+                                FLAGS.decode_to_file, input_sentence=FLAGS.input_sentence)
 
   def get_next(self, input_sentence):
     input_sentence_modify = ""

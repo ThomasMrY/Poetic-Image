@@ -23,7 +23,7 @@ def gen_cir_mask(w, h):
     Z_2 = np.where(abs(soft_mask-0.975)<0.025, np.ones_like(soft_mask), np.zeros_like(soft_mask))
     #Z_2 = np.where((1-soft_mask)<0.05, np.ones_like(soft_mask), np.zeros_like(soft_mask))
     return Z, Z_2
-def generate_final_image(user_image_path="imgs/download.jpg", background_image_path="./bg.jpg", poeitcs=["Sample Text 1", "Sample Text 1"], output_path='./output.jpeg'):
+def generate_final_image(user_image_path="imgs/download.jpg", background_image_path="./bg.jpg", poeitcs=["Sample Text 1", "Sample Text 1"]):
 
     im = Image.open(user_image_path)
     image = np.asarray(im)
@@ -59,7 +59,7 @@ def generate_final_image(user_image_path="imgs/download.jpg", background_image_p
     draw_whole.text((300, 500), poeitcs[1], (0,0,0),font=word_font)
     #plt.imshow(bg_img_2_resized)
 
-    bg_img_2_resized.save(output_path, 'jpeg')
+    #bg_img_2_resized.save(output_path, 'jpeg')
     return bg_img_2_resized
 
 if __name__ == "__main__":

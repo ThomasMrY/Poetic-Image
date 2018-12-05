@@ -2,8 +2,6 @@
 from PIL import Image, ImageDraw, ImageFont
 import matplotlib.pyplot as plt
 import numpy as np
-import cv2
-
 
 # im = Image.open(r"imgs/background.jpg")
 # draw = ImageDraw.Draw(im)

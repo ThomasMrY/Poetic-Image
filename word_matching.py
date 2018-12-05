@@ -5,7 +5,7 @@ import sys
 import json
 import requests
 import synonyms
-from RS import call_cv_api
+from cognitive_service import call_cv_api
 
 def translate(word):
     # 有道词典 api
